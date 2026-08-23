@@ -27,7 +27,7 @@ When a user uploads a structural schedule image, extract:
 Output strictly valid JSON with keys: mark, type, width_m, depth_m, length_m, count, rebar_dia_mm, rebar_length_m.
 """
 
-# 3. Load Groq Engine (Free API)
+# 3. Load Groq Engine (Connecting explicitly to Groq's API endpoint)
 try:
     groq_key = st.secrets["GROQ_API_KEY"]
     client = OpenAI(
@@ -46,7 +46,7 @@ waste_pct = st.sidebar.slider("Rebar Lap & Waste Allowance (%)", min_value=0, ma
 user_question = st.text_input("💬 Ask StructiCalc Agent a question:")
 if user_question:
     response = client.chat.completions.create(
-       model="llama-3.3-70b-versatile",
+        model="llama-3.3-70b-versatile",
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": user_question}
