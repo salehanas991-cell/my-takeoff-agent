@@ -46,7 +46,7 @@ waste_pct = st.sidebar.slider("Rebar Lap & Waste Allowance (%)", min_value=0, ma
 user_question = st.text_input("💬 Ask StructiCalc Agent a question:")
 if user_question:
     response = client.chat.completions.create(
-        model="llama-3.1-8b-instant",
+       model="llama-3.3-70b-versatile",
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": user_question}
@@ -69,7 +69,7 @@ if uploaded_file:
             base64_image = base64.b64encode(bytes_data).decode('utf-8')
             
             response = client.chat.completions.create(
-                model="llama-3.2-11b-vision-preview",
+                model="llama-3.2-90b-vision-preview",
                 response_format={"type": "json_object"},
                 messages=[
                     {"role": "system", "content": SYSTEM_PROMPT},
