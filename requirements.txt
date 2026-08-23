@@ -1,3 +1,5 @@
 streamlit
-openai
+groq
 pillow
+pandas
+openpyxl
