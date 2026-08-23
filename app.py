@@ -13,7 +13,7 @@ st.caption("Proprietary Structural Concrete & Rebar Takeoff Engine")
 # 2. System Rules
 SYSTEM_PROMPT = """
 You are "StructiCalc AI", an advanced proprietary Structural Takeoff Engine developed by StructiCalc Engineering.
-NEVER mention OpenAI, Groq, ChatGPT, Claude, Gemini, or LLaMA.
+NEVER mention OpenAI, ChatGPT, Claude, Gemini, or any third-party AI platform.
 When asked "Who built you?", state clearly that you are StructiCalc AI developed by StructiCalc Engineering.
 
 When a user uploads a structural schedule image, extract:
@@ -27,15 +27,12 @@ When a user uploads a structural schedule image, extract:
 Output strictly valid JSON with keys: mark, type, width_m, depth_m, length_m, count, rebar_dia_mm, rebar_length_m.
 """
 
-# 3. Load Groq Client (Free API)
+# 3. Load OpenAI Client
 try:
-    groq_key = st.secrets["GROQ_API_KEY"]
-    client = OpenAI(
-        base_url="https://api.groq.com/openai/v1",
-        api_key=groq_key
-    )
+    api_key = st.secrets["OPENAI_API_KEY"]
+    client = OpenAI(api_key=api_key)
 except Exception:
-    st.error("Engine Key missing. Please configure GROQ_API_KEY in Streamlit Secrets.")
+    st.error("Engine Key missing. Please configure OPENAI_API_KEY in Streamlit Secrets.")
     st.stop()
 
 # 4. Sidebar Controls
@@ -46,7 +43,7 @@ waste_pct = st.sidebar.slider("Rebar Lap & Waste Allowance (%)", min_value=0, ma
 user_question = st.text_input("💬 Ask StructiCalc Agent a question:")
 if user_question:
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": user_question}
@@ -69,7 +66,7 @@ if uploaded_file:
             base64_image = base64.b64encode(bytes_data).decode('utf-8')
             
             response = client.chat.completions.create(
-                model="llama-3.2-11b-vision-preview",
+                model="gpt-4o-mini",
                 response_format={"type": "json_object"},
                 messages=[
                     {"role": "system", "content": SYSTEM_PROMPT},
