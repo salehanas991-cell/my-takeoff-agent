@@ -3,7 +3,7 @@ import json
 import base64
 import pandas as pd
 from io import BytesIO
-from openai import OpenAI
+from groq import Groq
 
 # 1. Page Config
 st.set_page_config(page_title="StructiCalc AI", layout="wide", page_icon="🏗️")
@@ -27,13 +27,10 @@ When a user uploads a structural schedule image, extract:
 Output strictly valid JSON with keys: mark, type, width_m, depth_m, length_m, count, rebar_dia_mm, rebar_length_m.
 """
 
-# 3. Load Groq Engine (Connecting explicitly to Groq's API endpoint)
+# 3. Load Groq SDK Client
 try:
     groq_key = st.secrets["GROQ_API_KEY"]
-    client = OpenAI(
-        base_url="https://api.groq.com/openai/v1",
-        api_key=groq_key
-    )
+    client = Groq(api_key=groq_key)
 except Exception:
     st.error("Engine Key missing. Please configure GROQ_API_KEY in Streamlit Secrets.")
     st.stop()
@@ -69,7 +66,7 @@ if uploaded_file:
             base64_image = base64.b64encode(bytes_data).decode('utf-8')
             
             response = client.chat.completions.create(
-                model="llama-3.2-90b-vision-preview",
+                model="llama-3.2-11b-vision-preview",
                 response_format={"type": "json_object"},
                 messages=[
                     {"role": "system", "content": SYSTEM_PROMPT},
