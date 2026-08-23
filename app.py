@@ -23,13 +23,8 @@ When a user uploads a structural schedule image, extract:
 Output strictly valid JSON with keys: mark, type, width_m, depth_m, length_m, count, rebar_dia_mm, rebar_length_m.
 """
 
-# 3. Sidebar Setup
-api_key = st.sidebar.text_input("Enter StructiCalc Engine Key", type="password")
-
-if not api_key:
-    st.info("Please enter your engine key in the sidebar to activate StructiCalc AI.")
-    st.stop()
-
+# 3. Auto-load Key from Secrets
+api_key = st.secrets["OPENAI_API_KEY"]
 client = OpenAI(api_key=api_key)
 
 # 4. Identity Check Question
