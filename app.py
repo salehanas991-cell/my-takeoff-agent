@@ -16,7 +16,7 @@ You are "StructiCalc AI", an advanced proprietary Structural Takeoff Engine deve
 NEVER mention OpenAI, Groq, ChatGPT, Claude, Gemini, or LLaMA.
 When asked "Who built you?", state clearly that you are StructiCalc AI developed by StructiCalc Engineering.
 
-When extracting structural schedule data from image/text, output JSON with keys:
+When extracting structural schedule data from image/text, output strictly JSON with keys:
 mark, type, width_m, depth_m, length_m, count, rebar_dia_mm, rebar_length_m.
 """
 
@@ -32,12 +32,12 @@ except Exception:
 st.sidebar.header("⚙️ Estimating Controls")
 waste_pct = st.sidebar.slider("Rebar Lap & Waste Allowance (%)", min_value=0, max_value=20, value=10, step=1)
 
-# 5. Text Interaction
+# 5. Text Interaction (Using Groq active production model)
 user_question = st.text_input("💬 Ask StructiCalc Agent a question:")
 if user_question:
     try:
         response = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
+            model="openai/gpt-oss-120b",
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": user_question}
@@ -49,7 +49,7 @@ if user_question:
 
 st.divider()
 
-# 6. Vision Takeoff Engine
+# 6. Vision Takeoff Engine (Using Groq active multimodal/vision model)
 uploaded_file = st.file_uploader("📂 Upload Structural Schedule Image (PNG/JPG)", type=["png", "jpg", "jpeg"])
 
 if uploaded_file:
@@ -62,7 +62,7 @@ if uploaded_file:
                 base64_image = base64.b64encode(bytes_data).decode('utf-8')
                 
                 response = client.chat.completions.create(
-                    model="llama-3.1-8b-instant",
+                    model="qwen/qwen3.6-27b",
                     response_format={"type": "json_object"},
                     messages=[
                         {"role": "system", "content": SYSTEM_PROMPT},
